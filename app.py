@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from huggingface_hub import hf_hub_download
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
@@ -11,6 +12,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ---------- Load all models ----------
 def load_models():
+    model_path1 = hf_hub_download(
+        repo_id="Hs1534/dr_simple_cnn",
+        filename="model1_Simple_CNN.pth"
+    )
+    model_path2 = hf_hub_download(
+        repo_id="Hs1534/dr_simple_cnn",
+        filename="model2_pretrained_vgg.pth"
+    )
     models={
         "CNN": model1,
         "VGG 16": model2,
@@ -24,8 +33,8 @@ def load_models():
     #     "Model D": Model4(),
     # }
 
-    models["CNN"].load_state_dict(torch.load("models/model1_Simple_CNN.pth", map_location="cpu"))
-    models["VGG 16"].load_state_dict(torch.load("models/model2_pretrained_vgg.pth", map_location="cpu"))
+    models["CNN"].load_state_dict(torch.load(model_path1, map_location="cpu"))
+    models["VGG 16"].load_state_dict(torch.load(model_path2, map_location="cpu"))
     models["Model C"].load_state_dict(torch.load("models/model1_Simple_CNN.pth", map_location="cpu"))
     models["Model D"].load_state_dict(torch.load("models/model2_pretrained_vgg.pth", map_location="cpu"))
 
