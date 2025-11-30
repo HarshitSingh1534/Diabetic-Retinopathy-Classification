@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head><title>Results</title></head>
+<body>
+{% if mode == "single" %}
+    <h3>Results for Uploaded Image:</h3>
+    <img src="{{ url_for('static', filename='uploads/' + image_file) }}" width="300"><br><br>
+
+    <table border="1">
+        <tr><th>Model</th><th>Params</th><th>Accuracy (%)</th><th>Train Time</th><th>Inference Time (s)</th><th>Prediction</th></tr>
+        {% for name, data in results.items() %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ data.params }}</td>
+            <td>{{ data.accuracy }}</td>
+            <td>{{ data.train_time }}</td>
+            <td>{{ data.inference_time }}</td>
+            <td>{{ data.prediction }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% elif mode == "folder" %}
+    <h3>Batch Inference Results ({{ total_images }} images)</h3>
+    <table border="1">
+        <tr><th>Model</th><th>Accuracy (%)</th><th>Train Time</th><th>Avg Inference Time (s)</th></tr>
+        {% for name, time in avg_times.items() %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ model_info[name]["accuracy"] }}</td>
+            <td>{{ model_info[name]["train_time"] }}</td>
+            <td>{{ time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+</body>
+</html>
