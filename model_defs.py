@@ -44,9 +44,6 @@ class Model1(nn.Module):
 model1=Model1()
 
 
-model2=md.vgg16_bn(weights='IMAGENET1K_V1')
-model2.classifier[6] = nn.Linear(4096, 5)
 
-
-class Model3(nn.Module): pass
-class Model4(nn.Module): pass
+model3=md.vgg16_bn(weights='IMAGENET1K_V1')
+model3.classifier[6] = nn.Linear(4096, 5)

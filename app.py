@@ -4,7 +4,8 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 import os, time, zipfile
-from model_defs import model1, model2, Model3, Model4
+import models
+from model_defs import model1, model3
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "static/uploads"
@@ -16,15 +17,18 @@ def load_models():
         repo_id="Hs1534/dr_simple_cnn",
         filename="model1_Simple_CNN.pth"
     )
-    model_path2 = hf_hub_download(
+    # model_path2 = hf_hub_download(
+    #     repo_id="Hs1534/dr_simple_cnn",
+    #     filename="model2_ViT.pth"
+    # )
+    model_path3=hf_hub_download(
         repo_id="Hs1534/dr_simple_cnn",
         filename="model2_pretrained_vgg.pth"
     )
     models={
         "CNN": model1,
-        "VGG 16": model2,
-        "Model C": model1,
-        "Model D": model2,
+        "ViT": model3,
+        "VGG": model3,
     }
     # models = {
     #     "Model A": Model1(),
@@ -34,9 +38,8 @@ def load_models():
     # }
 
     models["CNN"].load_state_dict(torch.load(model_path1, map_location="cpu"))
-    models["VGG 16"].load_state_dict(torch.load(model_path2, map_location="cpu"))
-    models["Model C"].load_state_dict(torch.load("models/model1_Simple_CNN.pth", map_location="cpu"))
-    models["Model D"].load_state_dict(torch.load("models/model2_pretrained_vgg.pth", map_location="cpu"))
+    models["ViT"].load_state_dict(torch.load(model_path3, map_location="cpu"))
+    models["VGG"].load_state_dict(torch.load(model_path3, map_location="cpu"))
 
     for m in models.values():
         m.eval()
@@ -47,9 +50,8 @@ models = load_models()
 # ---------- Model Stats (you can modify) ----------
 model_info = {
     "CNN": {"accuracy": 73.49, "train_time": "37m"},
-    "VGG 16": {"accuracy": 84.70, "train_time": "3h 39m"},
-    "Model C": {"accuracy": 73.49, "train_time": "37m"},
-    "Model D": {"accuracy": 84.70, "train_time": "3h 39m"},
+    "ViT": {"accuracy": 73.49, "train_time": "40m"},
+    "VGG": {"accuracy": 84.70, "train_time": "3h 39m"},
 }
 
 def count_params(model):
@@ -131,4 +133,4 @@ def upload():
         })
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0",port=5000)
